@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 class CourseController extends Controller
 {
 
+
 //    public function add()
 //    {
 //        $data = [
@@ -585,4 +586,12 @@ class CourseController extends Controller
 
         return view('courses.view', $data);
     }
+
+
+//ajout pour composition
+
+
+
+
+
 }

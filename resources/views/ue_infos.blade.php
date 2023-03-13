@@ -182,6 +182,11 @@
                             <div class="ed_view_link">
                                 <a href="{{ route('class.follow_course', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Course<i class="ti-angle-right"></i></a>
                             </div>
+
+                            <div class="ed_view_link">
+                                <a href="{{ route('class.examination', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Examination<i class="ti-angle-right"></i></a>
+                            </div>
+
                         @endif
                     </div>
 

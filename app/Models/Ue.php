@@ -48,4 +48,11 @@ class Ue extends Model
     {
         return $this->belongsToMany(User::class)->withPivot("comment", "created_at")->withTimestamps();
     }
+
+
+    public function option(){
+        return $this->belongsTo(Option::class);
+    }
+
+
 }

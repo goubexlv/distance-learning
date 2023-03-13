@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\HomeController;
@@ -39,6 +40,12 @@ Route::post('/search', [HomeController::class, "filterUes"])->name("ues.search")
 // visio-conférence
 Route::get('/beta-test/{live_id}', [HomeController::class, "test"])->name("beta-test");
 Route::get('/beta-test-disconnect/{live_id}', [HomeController::class, "disconnectUserFromLive"])->name("beta-test-disconnect");
+
+
+//controle evaluations
+
+
+
 
 Auth::routes();
 

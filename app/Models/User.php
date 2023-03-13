@@ -88,4 +88,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Ue::class);
     }
+
+    public function userResults()
+    {
+        return $this->hasMany(Result::class);
+    }
 }

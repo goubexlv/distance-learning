@@ -3,6 +3,9 @@
 @section("content")
 
     <!-- Row -->
+    @if(session('message'))
+        <div class="alert alert-success">{{ session('message') }}</div>
+    @enderror
     <div class="row">
 
         <div class="col-lg-6 col-md-6 col-sm-12">

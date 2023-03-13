@@ -80,6 +80,7 @@
                 <div class="form-group text-right">
                     <button class="btn btn-outline-theme" id="addChapterButton" type="button">Add a Chapter</button>
                 </div>
+
                 <div id="accordionExample" class="accordion shadow circullum">
                     @foreach($ue->chapters as $chap)
                         <div class="card">
@@ -183,6 +184,14 @@
 
                 </div>
             </div>
+
+            <div class="edu_wraper">
+                <h4 class="edu_title">UE examination</h4>
+                    <div class="form-group text-right">
+                        <a href="{{route('class.add_examination', ['ue'=>$ue->code])}}" class="btn btn-outline-theme" >Add a examination</a>
+                    </div>
+                </div>
+
             </div>
 
         </div>

@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\LiveController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExaminationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +19,34 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('examination/add_examination/{ue}', [ExaminationController::class, 'add_examination'])->name('class.add_examination');
+
+//question route
+
+Route::get('/questions/{ue}', [ExaminationController::class, 'index1'])->name('questions.index');
+Route::get('/questions/create/{ue}', [ExaminationController::class, 'create'])->name('questions.create');
+Route::post('/', [ExaminationController::class, 'newquestion'])->name('questions.new');
+Route::get('questions/delete/{id}', [ExaminationController::class, "deletequestion"])->name('question.delete');
+Route::get('/edit/{id}', [ExaminationController::class, "editquestion"])->name("question.edit");
+Route::post('questions/update/{ue}', [ExaminationController::class, "updatequestion"])->name("question.update");
+
+
+
+//Options route
+Route::get('/options/{ue}', [OptionsController::class, 'index'])->name('options.index');
+Route::get('/options/create/{ue}', [OptionsController::class, 'create'])->name('options.create');
+Route::post('new/{ue}', [OptionsController::class, 'newoptions'])->name('options.new');
+Route::get('/delete/{id}', [OptionsController::class, "deleteoption"])->name("option.delete");
+
+
+
+//resultat
+Route::get('/result/{ue}', [ExaminationController::class, 'index2'])->name('result.index');
+
+
+
+
 
 Route::get('/', [TeacherController::class, "index"])->name("teacher.index");
 
@@ -51,3 +82,8 @@ Route::group(['prefix'=>"live"], function(){
     Route::post('/new',  [LiveController::class, 'create'])->name("user.lives.new");
     Route::post('/delete',  [LiveController::class, 'delete'])->name("user.lives.delete");
 });
+
+
+
+
+

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\HomeController;
@@ -21,7 +22,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Evaluation
+
+Route::get('/examination/{ue}', [ExaminationController::class, "follow_examination"])->name('class.examination');
+Route::post('test/{ue}', [ExaminationController::class, "store"])->name('test.store');
+
+
 Route::get('/', [UserController::class, "index"])->name("user.index");
+
+
 
 Route::group(['prefix'=>"course"], function(){
     Route::get('/v/{id}-{slug_course}', [CourseController::class, "course_details"])->name("course.enroll");
@@ -43,7 +52,11 @@ Route::group(['prefix'=>"my-classes"], function(){
     Route::get('', [ClassController::class, "index"])->name('class.index');
     Route::get('/follow_course/{ue}/{chapter?}', [CourseController::class, "follow_course"])->name('class.follow_course');
     Route::get('/follow_course/{ue}/{chapter?}/{resource}', [CourseController::class, "follow_course_resource"])->name('class.follow_course.resource');
+
+
 });
+
+
 
 Route::get('/lives', [HomeController::class, "lives"])->name("lives");
 Route::get('live/{live_code}',  [LiveController::class, 'live'])->name("user.lives.assist");
@@ -51,3 +64,8 @@ Route::post('ue/post-comment', [UeController::class, "comment"])->name("ue.post_
 
 Route::post('init-payment', [TransactionController::class, "initPayment"])->name("init-payment");
 Route::post('check-payment', [TransactionController::class, "checkPayment"])->name("check-payment");
+
+
+//ajout pour evaluation
+
+
