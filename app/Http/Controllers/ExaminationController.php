@@ -33,6 +33,34 @@ class ExaminationController extends Controller
         return view("teacher.examination.add_examination");
     }
 
+       //test evaluation
+
+       public function follow_examination($code)
+       {
+            //$note = User::with([userResults])
+           // The UE does not exists
+           $ue = Ue::whereCode($code)->first();
+
+
+           $afficher = Post::with(['question' => function ($query) {
+               $query->with(['option'])->get();
+           }])->where('code', $code)->get();
+
+           if(is_null($ue)){
+               abort(404);
+           }
+
+
+           $data = [
+               'title' => "$ue->name",
+               'ue'=> $ue,
+               'afficher' => $afficher,
+           ];
+
+           //dd($data);
+           return view('user.examination.examination', $data);
+       }
+
 
     public function add_examination($code, $chapter=null)
     {
@@ -206,35 +234,8 @@ class ExaminationController extends Controller
     }
 
 
-    //resultat et evaluation
 
-     //test evaluation
-
-     public function follow_examination($code)
-     {
-         // The UE does not exists
-         $ue = Ue::whereCode($code)->first();
-         //$options = Option::where('code_ue', $code)->get();
-        // $questions = Question::where('code_ue', $code)->get();
-
-         $afficher = Post::with(['question' => function ($query) {
-             $query->with(['option'])->get();
-         }])->where('code', $code)->get();
-
-         if(is_null($ue)){
-             abort(404);
-         }
-
-
-         $data = [
-             'title' => "$ue->name",
-             'ue'=> $ue,
-             'afficher' => $afficher,
-         ];
-
-         //dd($data);
-         return view('user.examination.examination', $data);
-     }
+      //resultat et evaluation
 
      public function store(StoreTestRequest $request, $code)
      {

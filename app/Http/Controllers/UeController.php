@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\UesImport;
 use App\Models\Field;
 use App\Models\Level;
+use App\Models\Result;
 use App\Models\Teacher;
 use App\Models\Ue;
 use Illuminate\Http\Request;
@@ -204,18 +205,29 @@ class UeController extends Controller
             abort(404);
         }
 
+        $veri = Result::where('code', $ue)->get();
+
         $ue = $level->ues()->where('ues.code', $ue)->first();
         if(is_null($ue)){
             abort(404);
         }
+
+
+        $user_choix  = [];
+        foreach($veri as $veris){
+
+            $user_choix = $veris->user_id;
+        }
+        //$user_choix = auth()->user()->userResults()->pluck('user_id')->toArray();
 
         $data = [
             'title' => "$ue->name | $level->name of $field->name - ",
             'field' => $field,
             'level' => $level,
             'ue' => $ue,
+            'veri' => $veri,
         ];
-
+        //dd($user_choix);
         return view("ue_infos", $data);
 
     }

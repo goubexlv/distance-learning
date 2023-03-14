@@ -182,10 +182,17 @@
                             <div class="ed_view_link">
                                 <a href="{{ route('class.follow_course', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Course<i class="ti-angle-right"></i></a>
                             </div>
-
+                                @php
+                                    $user_choix  = [];
+                                @endphp
+                                @auth <?php $user_choix = auth()->user()->userResults()->pluck('user_id')->toArray(); ?> @endauth
+                            @foreach($veri as $veris)
+                            @if(!in_array(auth()->user()->id, $user_choix))
                             <div class="ed_view_link">
                                 <a href="{{ route('class.examination', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Examination<i class="ti-angle-right"></i></a>
                             </div>
+                                @endif
+                            @endforeach
 
                         @endif
                     </div>

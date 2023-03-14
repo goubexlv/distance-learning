@@ -1,11 +1,11 @@
-@extends('layouts.client')
+@extends("layouts.user", ['container' => true])
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Results of your test</div>
+                <div class="card-header">Results of your EXAMINATION</div>
 
                 <div class="card-body">
                     <p class="mt-5">Total points: {{ $result->total_points }} points</p>
