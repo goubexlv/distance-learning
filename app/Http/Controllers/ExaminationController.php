@@ -49,7 +49,7 @@ class ExaminationController extends Controller
            if(is_null($ue)){
                abort(404);
            }
-
+           $nbr = count($afficher);
 
            $data = [
                'title' => "$ue->name",
@@ -57,7 +57,7 @@ class ExaminationController extends Controller
                'afficher' => $afficher,
            ];
 
-           //dd($data);
+           //dd($afficher);
            return view('user.examination.examination', $data);
        }
 
