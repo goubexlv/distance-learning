@@ -1,7 +1,8 @@
-@extends("layouts.user", ['container' => true])
+@extends("layouts.eva")
 
 @section('content')
 <div class="container">
+    <h4 class="edu_title" id="countminute" style="text-align: center; color:blue;" ></h4>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -18,7 +19,7 @@
                         </div>
                     @endif
                     <div class="card-header">{{ $title }}</div>
-                    <form method="POST" action="{{ route('test.store', $ue->code) }} ">
+                    <form method="POST" id="myForm" action="{{ route('test.store', $ue->code) }} ">
                         @csrf
                         @foreach($afficher as $affiche)
 
@@ -33,7 +34,7 @@
                                                 <input type="hidden" name="questions[{{ $questions->id }}]" value="">
                                                 @foreach($questions->option as $options)
 
-                                                    <div class="form-check">
+                                                    <div class="form-check" >
                                                         <input class="form-check-input" type="radio" name="questions[{{ $questions->id }}]" id="option-{{ $options->id }}" value="{{ $options->id }}"@if(old("questions.$questions->id") == $options->id) checked @endif>
                                                         <label class="form-check-label" for="option-{{ $options->id }}">
                                                             {{ $options->option_text }}
@@ -52,7 +53,6 @@
                                 </div>
 
                         @endforeach
-
                         <div class="form-group row mb-0">
                             <div class="col-md-6">
                                 <button type="submit" class="btn btn-primary">
@@ -66,20 +66,48 @@
         </div>
     </div>
 </div>
+
 @endsection
 
-
-
-
-
-    @section("js")
+@section("js")
     <script>
-        function openNav() {
-            document.getElementById("filter-sidebar").style.width = "320px";
-        }
+ $(function () {
+            alert("At the end of the time the results will be submitted automatically");
+            const startingMinutes = 1;
+            let time = startingMinutes * 60;
+            const countel = document.getElementById('countminute');
+            setInterval(() => {
 
-        function closeNav() {
-            document.getElementById("filter-sidebar").style.width = "0";
-        }
+                const minutes = Math.floor(time / 60);
+                let seconds = time % 60;
+                countel.innerHTML =  ` temps restant = ${minutes} : ${seconds}`;
+                time--;
+                if(time == 0){
+                    $.ajaxSetup({
+                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+                    });
+                        $.ajax({
+                            url: "{{ route('test.store', $ue->code) }}",
+                            type: "POST",
+                            data: $('#myForm').serialize(),
+                            success: function(reponse){
+                                window.location.href="{{ route('user.index')}}";
+                                },
+                                error: function(){
+                                    alert("Form submission failed!");
+                                }
+                            });
+
+                }
+
+            }, 1000);
+
+            clearTimeout(time);
+
+
+})
     </script>
 @endsection
+
+
+

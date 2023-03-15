@@ -237,24 +237,24 @@ class ExaminationController extends Controller
 
       //resultat et evaluation
 
-     public function store(StoreTestRequest $request, $code)
-     {
-         $options = Option::find(array_values($request->input('questions')));
+      public function store(Request $request, $code)
+      {
+          $options = Option::find(array_values($request->input('questions')));
 
-         $result = auth()->user()->userResults()->create([
-             'code' => $code,
-             'total_points' => $options->sum('points')
-         ]);
+          $result = auth()->user()->userResults()->create([
+              'code' => $code,
+              'total_points' => $options->sum('points')
+          ]);
 
-         $questions = $options->mapWithKeys(function ($option) {
-             return [$option->question_id => [
-                         'option_id' => $option->id,
-                         'points' => $option->points
-                     ]
-                 ];
-             })->toArray();
+          $questions = $options->mapWithKeys(function ($option) {
+              return [$option->question_id => [
+                          'option_id' => $option->id,
+                          'points' => $option->points
+                      ]
+                  ];
+              })->toArray();
 
-         $result->questions()->sync($questions);
+          $result->questions()->sync($questions);
 
          return redirect()->route('user.index')->with(
              'message','Evaluation Enregistrez !');
