@@ -21,6 +21,7 @@ use App\Http\Controllers\ExaminationController;
 */
 
 Route::get('examination/add_examination/{ue}', [ExaminationController::class, 'add_examination'])->name('class.add_examination');
+Route::post("add/{ue}", [ExaminationController::class, "createexam"])->name('exam.add');
 
 //question route
 

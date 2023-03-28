@@ -12,6 +12,7 @@ class Question extends Model
     protected $fillable=[
         'code',
         'question_text',
+        'type_exam'
     ];
 
     public function ue()

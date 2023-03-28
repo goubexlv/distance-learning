@@ -27,6 +27,84 @@ class ExaminationController extends Controller
 {
 
 
+    public function createexam(Request $request, $code)
+    {
+        error_reporting(0);
+
+        $this->validate($request, [
+            'document' => ['required','mimes:txt']
+        ]);
+
+        $doc_file= $request->document;
+        $doc_name = explode(".", $doc_file->getClientOriginalName());
+        $doc_name = Str::uuid().".".end($doc_name);
+        $doc_file->move("uploads/sn/", $doc_name);
+        $chemin = "uploads/sn/".$doc_name;
+        $lignes = file($chemin);
+        $question = "";
+        $option = "";
+        $idp = 0;
+        foreach($lignes as $ligne){
+
+            $lig = trim($ligne);
+
+            if($lig[0] == "?"){
+                $lig = substr($lig,1);
+                $question = $lig;
+                $idop = Question::create([
+                    'code' => $code,
+                    'question_text' => $question,
+                    'type_exam' => 'sn'
+
+                ]);
+
+                Post::create([
+
+                    'question_id' => $idop->id,
+                    'option_id' => 0,
+                    'code' => $code,
+                    'type_exam' => "sn"
+
+                ]);
+                $idp = $idop->id;
+            }elseif($lig[0] == "!"){
+                $lig = substr($lig,1);
+                $option = $lig;
+            }elseif($lig[0] == "*"){
+                $points = substr($lig,1);
+                $points = (int)$points;
+                Option::create([
+                    'question_id' => $idp,
+                    'code' => $code,
+                    'question' => $question,
+                    'option_text' => $option,
+                    'points' => $points,
+
+                ]);
+
+            }
+
+
+        }
+
+        $questions = Question::where('code', $code)->get();
+
+        // The UE does not exists
+        $ue = Ue::whereCode($code)->first();
+
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        $data = [
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'questions' => $questions,
+
+        ];
+
+        return view("teacher.questions.index", $data);
+    }
     public function index()
     {
 
@@ -43,7 +121,7 @@ class ExaminationController extends Controller
 
 
            $afficher = Post::with(['question' => function ($query) {
-               $query->with(['option'])->get();
+               $query->with(['option'])->where('type_exam', 'sn')->get();
            }])->where('code', $code)->get();
 
            if(is_null($ue)){

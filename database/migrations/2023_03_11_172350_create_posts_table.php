@@ -18,6 +18,7 @@ class CreatePostsTable extends Migration
             $table->integer('question_id');
             $table->integer('option_id');
             $table->string('code');
+            $table->string('type_exam');
             $table->timestamps();
         });
     }
