@@ -25,8 +25,6 @@
                                 <th>No</th>
                                 <th>User</th>
                                 <th>Points</th>
-                                <th>Questions</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>

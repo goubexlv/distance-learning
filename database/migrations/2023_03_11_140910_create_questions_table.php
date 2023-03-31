@@ -17,6 +17,7 @@ class CreateQuestionsTable extends Migration
             $table->id();
             $table->string("code");
             $table->string('question_text');
+            $table->string('type_exam');
             $table->timestamps();
         });
     }

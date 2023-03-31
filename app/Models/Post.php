@@ -13,6 +13,7 @@ class Post extends Model
         'question_id',
         'option_id',
         'code',
+        'type_exam'
     ];
 
     public function question(){

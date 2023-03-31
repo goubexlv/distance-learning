@@ -84,7 +84,7 @@
 
             <ul class="menu-inner py-1">
                 <li class="menu-item ">
-                    <a href="{{route('teacher.index')}}" class="menu-link">
+                    <a href="{{route('class.add_examination', ['ue'=>$ue->code])}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-user"></i> Home
                     </a>
                 </li>
