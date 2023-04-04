@@ -145,7 +145,7 @@ class ExaminationController extends Controller
                'afficher' => $afficher,
            ];
 
-           dd($data);
+           //dd($data);
            return view('user.examination.examination', $data);
        }
 
