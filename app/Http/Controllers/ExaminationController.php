@@ -119,15 +119,25 @@ class ExaminationController extends Controller
            // The UE does not exists
            $ue = Ue::whereCode($code)->first();
 
+           $aff = Post::all();
 
-           $afficher = Post::with(['question' => function ($query) {
-               $query->with(['option'])->where('type_exam', 'sn')->get();
-           }])->where('code', $code)->get();
+            if(count($aff) > 20){
+                $afficher = Post::with(['question' => function ($query) {
+                    $query->with(['option'])->where('type_exam', 'sn')->get();
+                }])->where('code', $code)->get()->random(20);
+            }else{
+                $afficher = Post::with(['question' => function ($query) {
+                    $query->with(['option'])->where('type_exam', 'sn')->get();
+                }])->where('code', $code)->get()->random(count($aff));
+
+            }
+
+            //dd($afficher);
 
            if(is_null($ue)){
                abort(404);
            }
-           $nbr = count($afficher);
+
 
            $data = [
                'title' => "$ue->name",
@@ -135,7 +145,7 @@ class ExaminationController extends Controller
                'afficher' => $afficher,
            ];
 
-           //dd($afficher);
+           dd($data);
            return view('user.examination.examination', $data);
        }
 
@@ -236,6 +246,7 @@ class ExaminationController extends Controller
         $idop = Question::create([
             'code' => $request->code_ue,
             'question_text' => $request->question_text,
+            'type_exam' => 'sn',
 
         ]);
 
@@ -244,6 +255,7 @@ class ExaminationController extends Controller
             'question_id' => $idop->id,
             'option_id' => 0,
             'code' => $request->code_ue,
+            'type_exam' => 'sn',
 
         ]);
 
@@ -334,8 +346,7 @@ class ExaminationController extends Controller
 
           $result->questions()->sync($questions);
 
-         return redirect()->route('user.index')->with(
-             'message','Evaluation Enregistrez !');
+         return redirect()->route('user.result', $result->id);
      }
 
     public function index2($code)
@@ -360,6 +371,48 @@ class ExaminationController extends Controller
         return view('teacher.results.index', $data);
     }
 
+    //resultat
+
+    public function show($result_id){
+
+
+            $result = Result::whereHas('user', function ($query) {
+                $query->whereId(auth()->id());
+            })->findOrFail($result_id);
+
+
+
+        $ue = Ue::whereCode($result->code)->first();
+        $data = [
+            'title' => "$ue->name",
+            'result'=> $result,
+            'ue'=> $ue,
+        ];
+
+        return view('user.examination.results', $data);
+    }
+
+    public function show2($code){
+
+
+        //$dernier = Result::where('code', $code)->latest();
+        $dernier = Result::where('code', $code)->get()->last();
+
+        $result = Result::whereHas('user', function ($query) {
+            $query->whereId(auth()->id());
+        })->findOrFail($dernier->id);
+
+
+
+    $ue = Ue::whereCode($result->code)->first();
+    $data = [
+        'title' => "$ue->name",
+        'result'=> $result,
+        'ue'=> $ue,
+    ];
+
+    return view('user.examination.results', $data);
+}
 
 
 

@@ -26,6 +26,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/examination/{ue}', [ExaminationController::class, "follow_examination"])->name('class.examination');
 Route::post('test/{ue}', [ExaminationController::class, "store"])->name('test.store');
+Route::get('result/{id}', [ExaminationController::class, "show"])->name('user.result');
+Route::get('results/{ue}', [ExaminationController::class, "show2"])->name('user.resultas');
 
 
 Route::get('/', [UserController::class, "index"])->name("user.index");
