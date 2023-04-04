@@ -20,6 +20,7 @@ use App\Models\Question;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use App\Models\Option;
+use App\Models\Tpexamination;
 use Illuminate\Http\RedirectResponse;
 
 
@@ -326,6 +327,30 @@ class ExaminationController extends Controller
 
 
       //resultat et evaluation
+
+      public function tpstore(Request $request, $ue, $id)
+    {
+        $this->validate($request, [
+            'document' => ['required','mimes:rar']
+        ]);
+
+        $id = (int)$id;
+        if(!is_null($request->document)){
+            $tp_file= $request->document;
+            $tp_name = explode(".", $tp_file->getClientOriginalName());
+            $tp_name = Str::uuid().".".end($tp_name);
+            $tp_file->move("uploads/tp/", $tp_name);
+        }
+
+        Tpexamination::create([
+            'document' => $tp_name,
+            'user_id' => $id,
+            'code' => $ue
+        ]);
+
+        return redirect()->back();
+
+    }
 
       public function store(Request $request, $code)
       {
