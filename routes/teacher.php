@@ -22,6 +22,11 @@ use App\Http\Controllers\ExaminationController;
 
 Route::get('examination/add_examination/{ue}', [ExaminationController::class, 'add_examination'])->name('class.add_examination');
 Route::post("add/{ue}", [ExaminationController::class, "createexam"])->name('exam.add');
+Route::get('/tp/{ue}', [ExaminationController::class, 'tpcontrole'])->name('result.tp');
+Route::get('/download/{nom}', [ExaminationController::class, 'downloadtp'])->name('download.don');
+
+Route::post('/modification/{id}', [ExaminationController::class, 'updatetp'])->name('tp.note.add');
+
 
 //question route
 

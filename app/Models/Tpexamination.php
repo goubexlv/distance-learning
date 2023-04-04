@@ -12,7 +12,8 @@ class Tpexamination extends Model
     protected $fillable=[
         'document',
         'user_id',
-        'code'
+        'code',
+        'note_tp'
     ];
 
     public function user()

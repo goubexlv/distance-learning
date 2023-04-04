@@ -18,6 +18,7 @@ class CreateTpexaminationsTable extends Migration
             $table->string('document');
             $table->integer('user_id');
             $table->string('code');
+            $table->integer('note_tp');
             $table->timestamps();
         });
     }

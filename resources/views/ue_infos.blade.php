@@ -203,7 +203,8 @@
                                         <hr>
                                         @csrf
                                         <div class="card-header bg-white shadow-sm border-0">
-                                            <h6 class="d-block position-relative text-dark py-2">Envoyer votre Tp</h6>
+                                            <h5 class="d-block position-relative text-dark py-2">Envoyer votre Tp</h5>
+                                            <h6 class="d-block position-relative text-dark py-2"><sup class="text-danger">Respecter la norme (Nom_matricule)</sup></h6>
                                         </div>
 
                                         <div class="row">

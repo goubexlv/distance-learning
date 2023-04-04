@@ -338,14 +338,15 @@ class ExaminationController extends Controller
         if(!is_null($request->document)){
             $tp_file= $request->document;
             $tp_name = explode(".", $tp_file->getClientOriginalName());
-            $tp_name = Str::uuid().".".end($tp_name);
+            $tp_name = $tp_name[0].".".end($tp_name);
             $tp_file->move("uploads/tp/", $tp_name);
         }
 
         Tpexamination::create([
             'document' => $tp_name,
             'user_id' => $id,
-            'code' => $ue
+            'code' => $ue,
+            'note_tp' => 0
         ]);
 
         return redirect()->back();
@@ -394,6 +395,64 @@ class ExaminationController extends Controller
         ];
         //dd($data);
         return view('teacher.results.index', $data);
+    }
+
+    public function tpcontrole($code)
+    {
+        $tpexam = Tpexamination::where('code', $code)->get();
+
+        // The UE does not exists
+        $ue = Ue::whereCode($code)->first();
+
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        $data = [
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'tpexam' => $tpexam,
+
+        ];
+        //dd($data);
+        return view('teacher.results.tpindex', $data);
+    }
+
+    public function downloadtp($code)
+    {
+        $tpexam = Tpexamination::where('code', $code)->get();
+
+        // The UE does not exists
+        $ue = Ue::whereCode($code)->first();
+
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        $data = [
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'tpexam' => $tpexam,
+
+        ];
+        //dd($data);
+        return view('teacher.results.tpindex', $data);
+    }
+
+    public function updatetp(Request $request, $id)
+    {
+
+        //dd($id);
+
+
+        $tps = Tpexamination::find($id);
+
+        $tps->update([
+            'note_tp' => $request->note,
+        ]); $tps->save();
+
+        return redirect()->back();
+
     }
 
     //resultat
