@@ -31,7 +31,7 @@
     "@expo/webpack-config": "^0.12.44",
     "agora-rtc-sdk-ng": "^4.16.0",
     "react-native-validator-form": "^1.0.0",
-    "webpack": "5.28.0",
+    "webpack": "5.76.0",
     "webpack-dev-server": "^4.11.1"
   }
 }
