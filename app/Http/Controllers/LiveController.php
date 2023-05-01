@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\MeetingZoomTrait;
 use App\Models\Live;
+use App\Models\online_classe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use MacsiDigital\Zoom\Facades\Zoom;
 
 class LiveController extends Controller
 {
+    use MeetingZoomTrait;
+
     public static function generateLiveCode(){
         /**
          * gen un code
@@ -22,9 +27,10 @@ class LiveController extends Controller
      */
     public function getUserLives()
     {
+
         $data = [
             'title' => "Live - ",
-            'lives' => auth()->user()->lives
+            'lives' => auth()->user()->onlines
         ];
 
         return view("user.lives.index", $data);
@@ -41,6 +47,8 @@ class LiveController extends Controller
 
     public function create(Request $request)
     {
+
+
         $this->validate($request, [
             'title' => "string",
             'start_time' => "date",
@@ -54,6 +62,22 @@ class LiveController extends Controller
             'user_id' => auth()->user()->id,
             'ue_id' => $request->ue
         ]);
+
+            $meeting = $this->createMeeting($request);
+
+            online_classe::create([
+                'uuid' => Str::uuid(),
+                'user_id' => auth()->user()->id,
+                'ue_id' => $request->ue,
+                'meeting_id' => $meeting->id,
+                'topic' => $request->title,
+                'start_at' => strtotime($request->start_time),
+                'duration' => $meeting->duration,
+                'password' => $meeting->password,
+                'start_url' => $meeting->start_url,
+                'join_url' => $meeting->join_url,
+            ]);
+
 
         return redirect()->back();
     }
@@ -78,15 +102,17 @@ class LiveController extends Controller
 
     public function live($live_code)
     {
-        $live = Live::where('uuid', $live_code)->first();
+        $live = online_classe::where('uuid', $live_code)->first();
+        $online = online_classe::where('uuid', $live_code)->first();
 
         if(is_null($live)){
             abort(404);
         }
-
+        //dd($live);
         $data = [
             'title' => "Assist Live - ",
             'live' => $live,
+            'online' => $online,
         ];
 
         return view("user.lives.assist", $data);

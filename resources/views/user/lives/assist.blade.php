@@ -28,13 +28,14 @@
             </div>
             @endif
 
+
             <div class="dashboard_container">
                 <div class="dashboard_container_body">
                     <div class="row justify-content-around m-3">
                         @if($live->user_id == auth()->user()->id)
-                        <button type="button" id="join" class="btn btn-theme mt-4" data-type="host" data-uid="{{ rand(11111, 99999) }}">Join</button>
+                        <button onclick="joindre2()" type="button" id="join" class="btn btn-theme mt-4" data-type="host" data-uid="{{ rand(11111, 99999) }}">Join</button>
                         @else
-                        <button type="button" class="btn btn-theme mt-4" id="join" data-type="audience" data-uid="{{ rand(111111, 999999) }}">Join</button>
+                        <button type="button" class="btn btn-theme mt-4" id="join" data-type="audience" onclick="joindre()" data-uid="{{ rand(111111, 999999) }}">Join</button>
                         @endif
                         <button type="button" class="d-none btn btn-theme" id="leave">Leave</button>
                     </div>
@@ -54,9 +55,54 @@
 @endsection
 
 @section("js")
-    <script src="{{asset("dist/live/bundle.js")}}"></script>
 
+<script>
+
+
+function joindre(){
+
+
+        if (document.all)
+        {
+            try {
+                var xml = new ActiveXObject("Microsoft.XMLHTTP");
+                xml.Open( "GET", "{{$live->join_url}}", false );
+                xml.Send()
+                document.getElementById("users_live").innerHTML=xml.responseText;
+            }
+            catch (e) {
+                var xml = new ActiveXObject("MSXML2.XMLHTTP.4.0");
+                xml.Open( "GET", "{{$live->join_url}}", false );
+                xml.Send()
+                document.getElementById("users_live").innerHTML=xml.responseText;
+            }
+            }
+            else
+            {
+                var xml=new XMLHttpRequest();
+                xml.open("GET","{{$live->join_url}}",false);
+                xml.send(null);
+                document.getElementById("users_live").innerHTML=xml.responseText;
+        }
+}
+
+function joindre2(){
+
+    $.ajax({
+        method: "GET", // GET ou POST comme tu veut
+        url: "{{$live->join_url}}", // La page qui va faire le traitement
+        data: "", // Les donnees a envoyer
+  success : function(resultat){
+    $('#users_live').html(resultat);
+  }
+})
+}
+
+
+
+</script>
     @if($live->user_id == auth()->user()->id)
+
     <script>
 
         function countUsers(){

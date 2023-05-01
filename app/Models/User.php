@@ -74,6 +74,11 @@ class User extends Authenticatable
         return $this->hasMany(Live::class);
     }
 
+    public function onlines()
+    {
+        return $this->hasMany(online_classe::class);
+    }
+
     public function teacher()
     {
         return $this->hasOne(Teacher::class);
