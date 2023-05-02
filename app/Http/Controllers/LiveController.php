@@ -88,14 +88,21 @@ class LiveController extends Controller
             'live' => "required",
         ]);
 
-        $live = Live::where([
-            'id' => $request->live,
-            'user_id' => auth()->user()->id
-        ])->first();
 
-        if(!is_null($live)) {
-            $live->delete();
-        }
+        //$live = online_classe::where([
+        //    'id' => $request->live,
+        //    'user_id' => auth()->user()->id
+        //])->first();
+
+        $meeting = Zoom::meeting()->find($request->live);
+        $meeting->delete();
+        online_classe::where('meeting_id', $request->live)->delete();
+
+        //online_classe::where('meeting_id', $request->id)->delete();
+
+        //if(!is_null($live)) {
+        //    $live->delete();
+       // }
 
         return redirect()->back();
     }
@@ -108,6 +115,7 @@ class LiveController extends Controller
         if(is_null($live)){
             abort(404);
         }
+
         //dd($live);
         $data = [
             'title' => "Assist Live - ",
