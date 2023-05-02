@@ -13,7 +13,7 @@ trait MeetingZoomTrait
         $meetingData = [
             'topic' => $request->title,
             'duration' => 60,
-            'password' => " ",
+            'password' => "",
             'start_time' => strtotime($request->start_time),
             'timezone' => config('zoom.timezone')
           // 'timezone' => 'Africa/Cairo'

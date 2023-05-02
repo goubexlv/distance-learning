@@ -33,9 +33,12 @@
                 <div class="dashboard_container_body">
                     <div class="row justify-content-around m-3">
                         @if($live->user_id == auth()->user()->id)
-                        <button onclick="joindre2()" type="button" id="join" class="btn btn-theme mt-4" data-type="host" data-uid="{{ rand(11111, 99999) }}">Join</button>
+                       {{-- <button onclick="joindre2()" type="button" id="join" class="btn btn-theme mt-4" data-type="host" data-uid="{{ rand(11111, 99999) }}">Join</button>--}}
+                        <a href="{{$live->join_url}}" data-id="{{$live->id}}" class="btn btn-theme mt-4">Join</a>
+
                         @else
-                        <button type="button" class="btn btn-theme mt-4" id="join" data-type="audience" onclick="joindre()" data-uid="{{ rand(111111, 999999) }}">Join</button>
+                       {{-- <button type="button" class="btn btn-theme mt-4" id="join" data-type="audience" onclick="joindre()" data-uid="{{ rand(111111, 999999) }}">Join</button>--}}
+                        <a href="{{$live->join_url}}" data-id="{{$live->id}}" class="btn btn-theme mt-4">Join</a>
                         @endif
                         <button type="button" class="d-none btn btn-theme" id="leave">Leave</button>
                     </div>
@@ -57,7 +60,9 @@
 @section("js")
 
 <script>
-
+    $.ajaxSetup({
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+    });
 
 function joindre(){
 

@@ -38,7 +38,7 @@ class LiveController extends Controller
 
     public function getNbreConectedUsers(Request $request)
     {
-        $live = Live::where('uuid', $request->uid)->first();
+        $live = online_classe::where('uuid', $request->uid)->first();
 
         echo json_encode([
             'users' => $live->participants->count()

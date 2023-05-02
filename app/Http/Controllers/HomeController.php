@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Live;
+use App\Models\online_classe;
 use App\Models\Ue;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -133,7 +134,7 @@ class HomeController extends Controller
 
     public function test($live_id)
     {
-        $live = Live::where('uuid', $live_id)->first();
+        $live = online_classe::where('uuid', $live_id)->first();
 
         if(is_null($live)){
             return null;
@@ -160,7 +161,7 @@ class HomeController extends Controller
 
     public static function disconnectUserFromLive($live_id)
     {
-        $live = Live::where('uuid', $live_id)->first();
+        $live = online_classe::where('uuid', $live_id)->first();
 
         $user = User::find(auth()->user()->id);
 
@@ -169,7 +170,6 @@ class HomeController extends Controller
         }
 
         $live->participants()->detach($user);
-
         return true;
     }
 

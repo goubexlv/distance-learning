@@ -67,7 +67,7 @@ class User extends Authenticatable
 
     public function assistsLives()
     {
-        return $this->belongsToMany(Live::class);
+        return $this->belongsToMany(online_classe::class);
     }
     public function lives()
     {
