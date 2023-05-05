@@ -192,6 +192,41 @@
                                 <a href="{{ route('class.examination', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Examination<i class="ti-angle-right"></i></a>
                             </div>
                                 @endif
+                                @php
+                                    $user_tp  = [];
+                                @endphp
+                                @auth <?php $user_tp = auth()->user()->userTp()->pluck('user_id')->toArray(); ?> @endauth
+
+                                @if($existe == "notnull" && !in_array(auth()->user()->id, $user_tp) )
+                                <div class="ed_view_link">
+                                    <form id="addtp" method="POST" action="{{route('tp.store', ['ue'=>$ue->code, 'id'=> auth()->user()->id ])}}" enctype="multipart/form-data">
+                                        <hr>
+                                        @csrf
+                                        <div class="card-header bg-white shadow-sm border-0">
+                                            <h5 class="d-block position-relative text-dark py-2">Envoyer votre Tp</h5>
+                                            <h6 class="d-block position-relative text-dark py-2"><sup class="text-danger">Respecter la norme (Nom_matricule)</sup></h6>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="form-group">
+                                                    <label>Document (.zip) <sup class="text-danger">*</sup></label>
+                                                    <input type="file" class="text-center form-control @error('document') is-invalid @enderror" name="document" required value="{{ old('document') }}">
+                                                    @error('document')
+                                                    <span class="text-danger text-sm" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+
+                                        <div class="form-group text-left">
+                                            <button class="btn btn-theme enroll-btn" type="submit">Submit Request</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                    @endif
 
 
                         @endif
