@@ -41,7 +41,7 @@ class Ue extends Model
 
     public function lives()
     {
-        return $this->hasMany(online_classe::class);
+        return $this->hasMany(Live::class);
     }
 
     public function comments()

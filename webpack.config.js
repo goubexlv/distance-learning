@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./next.congig.js",
+    entry: "./liveStreaming.js",
     output: {
         filename: "bundle.js",
         path: path.resolve(__dirname, "./public/dist/live"),

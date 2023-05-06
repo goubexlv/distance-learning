@@ -67,16 +67,11 @@ class User extends Authenticatable
 
     public function assistsLives()
     {
-        return $this->belongsToMany(online_classe::class);
+        return $this->belongsToMany(Live::class);
     }
     public function lives()
     {
         return $this->hasMany(Live::class);
-    }
-
-    public function onlines()
-    {
-        return $this->hasMany(online_classe::class);
     }
 
     public function teacher()
@@ -97,10 +92,5 @@ class User extends Authenticatable
     public function userResults()
     {
         return $this->hasMany(Result::class);
-    }
-
-    public function userTp()
-    {
-        return $this->hasMany(Tpexamination::class);
     }
 }

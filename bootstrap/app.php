@@ -11,12 +11,6 @@
 |
 */
 
-
-header('Access-Control-Allow-Origin:  http://localhost:8000');
-header('Access-Control-Allow-Methods: GET,OPTIONS,PATCH,DELETE,POST,PUT' );
-header('Access-Control-Allow-Headers: X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Auth-Token,X-Api-Version, Authorization' );
-
-
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );

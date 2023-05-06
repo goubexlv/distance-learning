@@ -90,12 +90,6 @@
                 </li>
                 <br>
                 <li class="menu-item ">
-                    <a href="{{route('result.tp', ['ue'=>$ue->code])}}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bx-user"></i> TP
-                    </a>
-                </li>
-                <br>
-                <li class="menu-item ">
                     <a href="{{route('questions.index', ['ue'=>$ue->code])}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-user"></i> Questions
                     </a>
@@ -106,7 +100,6 @@
                         <i class="menu-icon tf-icons bx bx-user"></i> Options
                     </a>
                 </li>
-
                 <br>
                 <li class="menu-item">
                     <a href="{{route('result.index', ['ue'=>$ue->code])}}" class="menu-link">
@@ -140,7 +133,7 @@
                             </a>
 
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('teacher.index') }}" target="_blank" ">
+                                    <a class="dropdown-item" href="{{ route('teacher.index') }}" target="_blank" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="bx bx-power-off me-2"></i>
                                         <span class="align-middle">Sortir</span>
                                     </a>
