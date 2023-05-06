@@ -66,7 +66,7 @@
         </div>
     </div>
 </div>
-<?php $id = 0; ?>
+
 @endsection
 
 @section("js")
@@ -91,7 +91,7 @@
                             type: "POST",
                             data: $('#myForm').serialize(),
                             success: function(reponse){
-                                window.location.href="{{ route('user.resultas', ['ue'=>$ue->code] )}}";
+                                window.location.href="{{ route('user.index')}}";
                                 },
                                 error: function(){
                                     alert("Form submission failed!");

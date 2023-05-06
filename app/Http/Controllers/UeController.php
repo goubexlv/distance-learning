@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Imports\UesImport;
-use App\Models\Chapter;
 use App\Models\Field;
 use App\Models\Level;
 use App\Models\Result;
 use App\Models\Teacher;
-use App\Models\Tpexamination;
 use App\Models\Ue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -207,17 +205,6 @@ class UeController extends Controller
             abort(404);
         }
 
-        $ues = Ue::whereCode($ue)->first();
-        $chapitre = Chapter::all();
-        $existe = "null";
-
-        foreach($chapitre as $chap){
-            if($chap->ue_id == $ues->id && $chap->tp != Null){
-                $existe = "notnull";
-            }
-        }
-
-
         $veri = Result::where('code', $ue)->get();
 
         $ue = $level->ues()->where('ues.code', $ue)->first();
@@ -226,6 +213,11 @@ class UeController extends Controller
         }
 
 
+        $user_choix  = [];
+        foreach($veri as $veris){
+
+            $user_choix = $veris->user_id;
+        }
         //$user_choix = auth()->user()->userResults()->pluck('user_id')->toArray();
 
         $data = [
@@ -234,7 +226,6 @@ class UeController extends Controller
             'level' => $level,
             'ue' => $ue,
             'veri' => $veri,
-            'existe' => $existe
         ];
         //dd($user_choix);
         return view("ue_infos", $data);

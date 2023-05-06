@@ -20,7 +20,6 @@ use App\Models\Question;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use App\Models\Option;
-use App\Models\Tpexamination;
 use Illuminate\Http\RedirectResponse;
 
 
@@ -120,25 +119,15 @@ class ExaminationController extends Controller
            // The UE does not exists
            $ue = Ue::whereCode($code)->first();
 
-           $aff = Post::all();
 
-            if(count($aff) > 20){
-                $afficher = Post::with(['question' => function ($query) {
-                    $query->with(['option'])->where('type_exam', 'sn')->get();
-                }])->where('code', $code)->get()->random(20);
-            }else{
-                $afficher = Post::with(['question' => function ($query) {
-                    $query->with(['option'])->where('type_exam', 'sn')->get();
-                }])->where('code', $code)->get()->random(count($aff));
-
-            }
-
-            //dd($afficher);
+           $afficher = Post::with(['question' => function ($query) {
+               $query->with(['option'])->where('type_exam', 'sn')->get();
+           }])->where('code', $code)->get();
 
            if(is_null($ue)){
                abort(404);
            }
-
+           $nbr = count($afficher);
 
            $data = [
                'title' => "$ue->name",
@@ -146,7 +135,7 @@ class ExaminationController extends Controller
                'afficher' => $afficher,
            ];
 
-           //dd($data);
+           //dd($afficher);
            return view('user.examination.examination', $data);
        }
 
@@ -247,7 +236,6 @@ class ExaminationController extends Controller
         $idop = Question::create([
             'code' => $request->code_ue,
             'question_text' => $request->question_text,
-            'type_exam' => 'sn',
 
         ]);
 
@@ -256,7 +244,6 @@ class ExaminationController extends Controller
             'question_id' => $idop->id,
             'option_id' => 0,
             'code' => $request->code_ue,
-            'type_exam' => 'sn',
 
         ]);
 
@@ -328,31 +315,6 @@ class ExaminationController extends Controller
 
       //resultat et evaluation
 
-      public function tpstore(Request $request, $ue, $id)
-    {
-        $this->validate($request, [
-            'document' => ['required','mimes:rar']
-        ]);
-
-        $id = (int)$id;
-        if(!is_null($request->document)){
-            $tp_file= $request->document;
-            $tp_name = explode(".", $tp_file->getClientOriginalName());
-            $tp_name = $tp_name[0].".".end($tp_name);
-            $tp_file->move("uploads/tp/", $tp_name);
-        }
-
-        Tpexamination::create([
-            'document' => $tp_name,
-            'user_id' => $id,
-            'code' => $ue,
-            'note_tp' => 0
-        ]);
-
-        return redirect()->back();
-
-    }
-
       public function store(Request $request, $code)
       {
           $options = Option::find(array_values($request->input('questions')));
@@ -372,7 +334,8 @@ class ExaminationController extends Controller
 
           $result->questions()->sync($questions);
 
-         return redirect()->route('user.result', $result->id);
+         return redirect()->route('user.index')->with(
+             'message','Evaluation Enregistrez !');
      }
 
     public function index2($code)
@@ -397,106 +360,6 @@ class ExaminationController extends Controller
         return view('teacher.results.index', $data);
     }
 
-    public function tpcontrole($code)
-    {
-        $tpexam = Tpexamination::where('code', $code)->get();
-
-        // The UE does not exists
-        $ue = Ue::whereCode($code)->first();
-
-        if(is_null($ue)){
-            abort(404);
-        }
-
-        $data = [
-            'title' => "$ue->name",
-            'ue'=> $ue,
-            'tpexam' => $tpexam,
-
-        ];
-        //dd($data);
-        return view('teacher.results.tpindex', $data);
-    }
-
-    public function downloadtp($code)
-    {
-        $tpexam = Tpexamination::where('code', $code)->get();
-
-        // The UE does not exists
-        $ue = Ue::whereCode($code)->first();
-
-        if(is_null($ue)){
-            abort(404);
-        }
-
-        $data = [
-            'title' => "$ue->name",
-            'ue'=> $ue,
-            'tpexam' => $tpexam,
-
-        ];
-        //dd($data);
-        return view('teacher.results.tpindex', $data);
-    }
-
-    public function updatetp(Request $request, $id)
-    {
-
-        //dd($id);
-
-
-        $tps = Tpexamination::find($id);
-
-        $tps->update([
-            'note_tp' => $request->note,
-        ]); $tps->save();
-
-        return redirect()->back();
-
-    }
-
-    //resultat
-
-    public function show($result_id){
-
-
-            $result = Result::whereHas('user', function ($query) {
-                $query->whereId(auth()->id());
-            })->findOrFail($result_id);
-
-
-
-        $ue = Ue::whereCode($result->code)->first();
-        $data = [
-            'title' => "$ue->name",
-            'result'=> $result,
-            'ue'=> $ue,
-        ];
-
-        return view('user.examination.results', $data);
-    }
-
-    public function show2($code){
-
-
-        //$dernier = Result::where('code', $code)->latest();
-        $dernier = Result::where('code', $code)->get()->last();
-
-        $result = Result::whereHas('user', function ($query) {
-            $query->whereId(auth()->id());
-        })->findOrFail($dernier->id);
-
-
-
-    $ue = Ue::whereCode($result->code)->first();
-    $data = [
-        'title' => "$ue->name",
-        'result'=> $result,
-        'ue'=> $ue,
-    ];
-
-    return view('user.examination.results', $data);
-}
 
 
 
