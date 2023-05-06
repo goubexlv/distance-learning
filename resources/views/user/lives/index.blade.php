@@ -51,7 +51,7 @@
                                                 <a href="{{route('user.lives.assist', ['live_code'=>$live->uuid])}}" data-id="{{$live->id}}" class="btn text-danger btn-sm initLive">Start Live</a>
                                             </div>
                                             <div class="col-6 text-right">
-                                                <a href="javascript:void(0);" data-id="{{$live->id}}" class="btn text-danger btn-sm deleteLive"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                <a href="javascript:void(0);" data-id="{{$live->meeting_id}}" class="btn text-danger btn-sm deleteLive"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                             </div>
                                         </div>
                                     </div>
