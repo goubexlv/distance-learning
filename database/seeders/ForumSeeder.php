@@ -1,8 +1,11 @@
 <?php
 
-namespace TeamTeaTime\Forum\Database\Seeders;
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+
+
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -20,7 +23,8 @@ class ForumSeeder extends Seeder
     {
         $userModel = config('forum.integration.user_model');
         $userId = DB::table((new $userModel)->getTable())->insertGetId([
-            'name' => Str::random(10),
+            'firstname' => 'Str::random(10)',
+            'lastname' => 'Str::random(10)',
             'email' => Str::random(10).'@gmail.com',
             'password' => Hash::make('secret'),
         ]);
