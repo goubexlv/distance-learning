@@ -178,7 +178,7 @@
 <body>
     <nav class="v-navbar navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ url(config('forum.web.router.prefix')) }}">Laravel Forum</a>
+            <a class="navbar-brand" href="{{ url(config('forum.web.router.prefix')) }}">My Forum</a>
             <button class="navbar-toggler" type="button" :class="{ collapsed: isCollapsed }" @click="isCollapsed = ! isCollapsed">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -200,12 +200,16 @@
                             <a class="nav-link" href="{{ route('forum.category.manage') }}">{{ trans('forum::general.manage') }}</a>
                         </li>
                     @endcan
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('user.index') }}">Home</a>
+                        </li>
+                     
                 </ul>
                 <ul class="navbar-nav">
                     @if (Auth::check())
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" @click="isUserDropdownCollapsed = ! isUserDropdownCollapsed">
-                                {{ $username }}
+                                {{ auth()->user()->name }}
                             </a>
                             <div class="dropdown-menu" :class="{ show: ! isUserDropdownCollapsed }" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

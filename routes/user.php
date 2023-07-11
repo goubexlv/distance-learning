@@ -70,5 +70,3 @@ Route::post('check-payment', [TransactionController::class, "checkPayment"])->na
 
 
 //ajout pour evaluation
-
-

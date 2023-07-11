@@ -8,6 +8,8 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ForumController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +53,5 @@ Auth::routes();
 
 
 Route::get('test/{id}', [\App\Http\Controllers\TransactionController::class, "test"]);
+
+Route::get('/forum', [ForumController::class, 'forum'])->name("forum");

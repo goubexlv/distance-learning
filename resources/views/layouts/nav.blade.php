@@ -20,12 +20,14 @@
                     @if(auth()->user()->priority == \App\Models\User::USER_PRIORITY['teacher'])
                         <li class=""><a href="{{route('teacher.index')}}"><i class="ti-user"></i> Welcome <strong>{{ auth()->user()->name }}</strong> </a></li>
                         <li><a href="{{route('teacher.ues')}}">My Courses</a></li>
+                        <li><a href="{{route('forum')}}">Forum</a></li>
                         <li><a href="{{route('user.lives')}}">My Lives</a></li>
                     @elseif(auth()->user()->priority == \App\Models\User::USER_PRIORITY['admin'])
                         <li class=""><a href="{{route('admin.index')}}"><i class="ti-user"></i> Welcome <strong>{{ auth()->user()->name }}</strong> </a></li>
                     @else
                         <li class=""><a href="{{route('user.index')}}"><i class="ti-user"></i> Welcome <strong>{{ auth()->user()->name }}</strong> </a></li>
                         <li><a href="{{route('class.index')}}">My Class</a></li>
+                        <li><a href="{{route('forum')}}">Forum</a></li>
                         <li><a href="{{route('lives')}}">
                                 Lives
                                 @php $count_lives = count(getStudentLives()) @endphp
