@@ -54,9 +54,9 @@ class LiveController extends Controller
             'start_time' => "date",
             'ue' => "required|exists:ues,id",
         ]);
-
+        $nom = Str::uuid();
         Live::create([
-            'uuid' => Str::uuid(),
+            'uuid' => $nom,
             'titre' => $request->title,
             'date_debut' => strtotime($request->start_time),
             'user_id' => auth()->user()->id,
@@ -66,7 +66,7 @@ class LiveController extends Controller
             $meeting = $this->createMeeting($request);
 
             online_classe::create([
-                'uuid' => Str::uuid(),
+                'uuid' => $nom,
                 'user_id' => auth()->user()->id,
                 'ue_id' => $request->ue,
                 'meeting_id' => $meeting->id,
@@ -110,16 +110,17 @@ class LiveController extends Controller
     public function live($live_code)
     {
         $live = online_classe::where('uuid', $live_code)->first();
-        $online = online_classe::where('uuid', $live_code)->first();
+        $online = Live::where('uuid', $live_code)->first();
 
         if(is_null($live)){
             abort(404);
         }
 
-        //dd($live);
+        //dd(auth()->user()->name);
         $data = [
             'title' => "Assist Live - ",
             'live' => $live,
+            'nom' => auth()->user()->name,
             'online' => $online,
         ];
 

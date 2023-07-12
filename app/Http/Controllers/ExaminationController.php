@@ -122,14 +122,15 @@ class ExaminationController extends Controller
 
            $aff = Post::all();
 
+
             if(count($aff) > 20){
                 $afficher = Post::with(['question' => function ($query) {
                     $query->with(['option'])->where('type_exam', 'sn')->get();
-                }])->where('code', $code)->get()->random(20);
+                }])->where('code', $code)->get();
             }else{
                 $afficher = Post::with(['question' => function ($query) {
                     $query->with(['option'])->where('type_exam', 'sn')->get();
-                }])->where('code', $code)->get()->random(count($aff));
+                }])->where('code', $code)->get();
 
             }
 
@@ -139,7 +140,7 @@ class ExaminationController extends Controller
                abort(404);
            }
 
-
+           //dd($afficher);
            $data = [
                'title' => "$ue->name",
                'ue'=> $ue,

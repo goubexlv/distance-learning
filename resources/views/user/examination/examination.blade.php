@@ -22,13 +22,19 @@
                     <form method="POST" id="myForm" action="{{ route('test.store', $ue->code) }} ">
                         @csrf
                         @foreach($afficher as $affiche)
-
-
+                            @php
+                                int i = 0 ;
+                            @endphp
                                 <div class="card-body">
                                     @foreach($affiche->question as $questions)
+                                        @php
+                                            int i = i+1 ;
+                                        @endphp
 
                                         <div class="card @if(!$loop->last)mb-3 @endif">
-                                            <div class="card-header">{{ $questions->question_text }}</div>
+
+                                            <div class="card-header">
+                                             {{ $questions->question_text }}</div>
 
                                             <div class="card-body">
                                                 <input type="hidden" name="questions[{{ $questions->id }}]" value="">
