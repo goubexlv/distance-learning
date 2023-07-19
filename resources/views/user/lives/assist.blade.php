@@ -45,10 +45,10 @@
                         <button type="button" class="d-none btn btn-theme" id="leave">Leave</button>
                     </div>
                 </div>
-                <div class="dashboard_container_header">
+
                      <div id="users_live" class="container align-items-center">
                 </div>
-                </div>
+
 
             </div>
 
@@ -60,7 +60,7 @@
 @endsection
 
 @section("js")
-<script src='https://192.168.43.214/external_api.js'></script>
+<script src='https://meet.jit.si/external_api.js'></script>
 
 <script>
 var button = document.querySelector('#join');
@@ -72,7 +72,7 @@ button.addEventListener('click', () => {
     var nom = "{{$nom}}";
     var randomString = "{{$online->titre}}";
 
-    var domain = "192.168.43.214";
+    var domain = "meet.jit.si";
     var options = {
         "roomName": randomString,
         "parentNode": container,
