@@ -2,7 +2,9 @@
 
 @section('content')
 <div class="container">
-    <h4 class="edu_title" id="countminute" style="text-align: center; color:blue;" ></h4>
+    <div>
+    <center><p>Après la fin du temps le formulaire sera automatiquement envoyé</p></center> <h4 class="edu_title" id="countminute" style="text-align: center; color: red;" ></h4>
+    </div>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -18,22 +20,18 @@
                             </div>
                         </div>
                     @endif
-                    <div class="card-header">{{ $title }}</div>
+                    <div class="card-header" style="font-weight: bold; color: blue;">{{ $title }}</div>
                     <form method="POST" id="myForm" action="{{ route('test.store', $ue->code) }} ">
                         @csrf
                         @foreach($afficher as $affiche)
-                            @php
-                                int i = 0 ;
-                            @endphp
+
                                 <div class="card-body">
                                     @foreach($affiche->question as $questions)
-                                        @php
-                                            int i = i+1 ;
-                                        @endphp
+
 
                                         <div class="card @if(!$loop->last)mb-3 @endif">
 
-                                            <div class="card-header">
+                                            <div class="card-header" style="font-weight: bold; font-style: italic; color: black;">
                                              {{ $questions->question_text }}</div>
 
                                             <div class="card-body">
@@ -72,21 +70,21 @@
         </div>
     </div>
 </div>
-<?php $id = 0; ?>
+
 @endsection
 
 @section("js")
     <script>
  $(function () {
             alert("At the end of the time the results will be submitted automatically");
-            const startingMinutes = 1;
+            const startingMinutes = 60;
             let time = startingMinutes * 60;
             const countel = document.getElementById('countminute');
             setInterval(() => {
-
+                const heure = time % 60;
                 const minutes = Math.floor(time / 60);
                 let seconds = time % 60;
-                countel.innerHTML =  ` temps restant = ${minutes} : ${seconds}`;
+                countel.innerHTML =  ` temps restant = ${heure} : ${minutes} : ${seconds}`;
                 time--;
                 if(time == 0){
                     $.ajaxSetup({

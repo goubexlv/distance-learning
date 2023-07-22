@@ -24,4 +24,8 @@ class Result extends Model
     {
         return $this->belongsToMany(Question::class)->withPivot(['option_id', 'points']);
     }
+    public function ue()
+    {
+        return $this->belongsTo(Ue::class, 'code');
+    }
 }

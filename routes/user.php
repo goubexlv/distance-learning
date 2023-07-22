@@ -29,6 +29,7 @@ Route::post('test/{ue}', [ExaminationController::class, "store"])->name('test.st
 Route::post('/tp/{ue}/{id}', [ExaminationController::class, 'tpstore'])->name("tp.store");
 Route::get('result/{id}', [ExaminationController::class, "show"])->name('user.result');
 Route::get('results/{ue}', [ExaminationController::class, "show2"])->name('user.resultas');
+Route::get('consulter/{id}', [ExaminationController::class, "consulter"])->name('user.consulter');
 
 
 Route::get('/', [UserController::class, "index"])->name("user.index");

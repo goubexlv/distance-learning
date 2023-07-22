@@ -40,7 +40,7 @@
                        <button  type="button" id="join" class="btn btn-theme mt-4" data-type="host" data-uid="{{ rand(11111, 99999) }}">Join local</button>
 
                        {{-- <button type="button" class="btn btn-theme mt-4" id="join" data-type="audience" onclick="joindre()" data-uid="{{ rand(111111, 999999) }}">Join</button>--}}
-                        <a href="{{$live->join_url}}" data-id="{{$live->id}}" class="btn btn-theme mt-4">Joint</a>
+                        <a href="{{$live->join_url}}" data-id="{{$live->id}}" class="btn btn-theme mt-4">Join</a>
                         @endif
                         <button type="button" class="d-none btn btn-theme" id="leave">Leave</button>
                     </div>
@@ -76,7 +76,7 @@ button.addEventListener('click', () => {
     var options = {
         "roomName": randomString,
         "parentNode": container,
-        "width": 600,
+        "width": 1100,
         "height": 600,
         userInfo: {
         	displayName: nom

@@ -458,24 +458,42 @@ class ExaminationController extends Controller
 
     //resultat
 
-    public function show($result_id){
-
-
-            $result = Result::whereHas('user', function ($query) {
-                $query->whereId(auth()->id());
-            })->findOrFail($result_id);
+    public function consulter($result_id){
 
 
 
-        $ue = Ue::whereCode($result->code)->first();
+
+        $results = Result::where('user_id', $result_id)->get();
+
+        $tableaucode = [];
+        $tableaunom = [];
+
+        foreach ($results as $value){
+
+            $tableaucode [] =   $value->code;
+        }
+
+        foreach ($tableaucode as $value){
+
+            $ue = Ue::whereCode($value)->first();
+            $tableaunom [$value] =   $ue->name;
+        }
+
+
+
         $data = [
-            'title' => "$ue->name",
-            'result'=> $result,
-            'ue'=> $ue,
+            'title' => "All UEs - ",
+            'titre' => $tableaunom,
+            'results'=> $results,
+
         ];
 
-        return view('user.examination.results', $data);
+       // dd($data);
+
+        return view('user.examination.consulter', $data);
     }
+
+
 
     public function show2($code){
 
