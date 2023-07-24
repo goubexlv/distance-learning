@@ -80,6 +80,7 @@ class ExaminationController extends Controller
                     'question' => $question,
                     'option_text' => $option,
                     'points' => $points,
+                    'type_exam' => "sn"
 
                 ]);
 
@@ -88,7 +89,7 @@ class ExaminationController extends Controller
 
         }
 
-        $questions = Question::where('code', $code)->get();
+        $questions = Question::where('code', $code)->where("type_exam", 'sn')->get();
 
         // The UE does not exists
         $ue = Ue::whereCode($code)->first();
@@ -105,6 +106,86 @@ class ExaminationController extends Controller
         ];
 
         return view("teacher.questions.index", $data);
+    }
+
+    public function createexam_cc(Request $request, $code)
+    {
+        error_reporting(0);
+
+        $this->validate($request, [
+            'document' => ['required','mimes:txt']
+        ]);
+
+        $doc_file= $request->document;
+        $doc_name = explode(".", $doc_file->getClientOriginalName());
+        $doc_name = Str::uuid().".".end($doc_name);
+        $doc_file->move("uploads/cc/", $doc_name);
+        $chemin = "uploads/cc/".$doc_name;
+        $lignes = file($chemin);
+        $question = "";
+        $option = "";
+        $idp = 0;
+        foreach($lignes as $ligne){
+
+            $lig = trim($ligne);
+
+            if($lig[0] == "?"){
+                $lig = substr($lig,1);
+                $question = $lig;
+                $idop = Question::create([
+                    'code' => $code,
+                    'question_text' => $question,
+                    'type_exam' => 'cc'
+
+                ]);
+
+                Post::create([
+
+                    'question_id' => $idop->id,
+                    'option_id' => 0,
+                    'code' => $code,
+                    'type_exam' => "cc"
+
+                ]);
+                $idp = $idop->id;
+            }elseif($lig[0] == "!"){
+                $lig = substr($lig,1);
+                $option = $lig;
+            }elseif($lig[0] == "*"){
+                $points = substr($lig,1);
+                $points = (int)$points;
+                Option::create([
+                    'question_id' => $idp,
+                    'code' => $code,
+                    'question' => $question,
+                    'option_text' => $option,
+                    'points' => $points,
+                    'type_exam' => "cc"
+
+                ]);
+
+            }
+
+
+        }
+
+        $questions = Question::where('code', $code )->where("type_exam", 'cc')->get();
+
+        // The UE does not exists
+        $ue = Ue::whereCode($code)->first();
+
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        $data = [
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'questions' => $questions,
+
+        ];
+
+        return view("teacher.cc.questions.index", $data);
     }
     public function index()
     {
@@ -126,11 +207,11 @@ class ExaminationController extends Controller
             if(count($aff) > 20){
                 $afficher = Post::with(['question' => function ($query) {
                     $query->with(['option'])->where('type_exam', 'sn')->get();
-                }])->where('code', $code)->get();
+                }])->where('code', $code)->where('type_exam', 'sn')->get();
             }else{
                 $afficher = Post::with(['question' => function ($query) {
                     $query->with(['option'])->where('type_exam', 'sn')->get();
-                }])->where('code', $code)->get();
+                }])->where('code', $code)->where('type_exam', 'sn')->get();
 
             }
 
@@ -149,6 +230,44 @@ class ExaminationController extends Controller
 
            //dd($data);
            return view('user.examination.examination', $data);
+       }
+
+       public function follow_examination_cc($code)
+       {
+            //$note = User::with([userResults])
+           // The UE does not exists
+           $ue = Ue::whereCode($code)->first();
+
+           $aff = Post::all();
+
+
+            if(count($aff) > 20){
+                $afficher = Post::with(['question' => function ($query) {
+                    $query->with(['option'])->where('type_exam', 'cc')->get();
+                }])->where('code', $code)->where('type_exam', 'cc')->get();
+            }else{
+                $afficher = Post::with(['question' => function ($query) {
+                    $query->with(['option'])->where('type_exam', 'cc')->get();
+                }])->where('code', $code)->where('type_exam', 'cc')->get();
+
+            }
+
+            //dd($afficher);
+
+           if(is_null($ue)){
+               abort(404);
+           }
+
+           //dd($afficher);
+           $data = [
+               'title' => "$ue->name",
+               'ue'=> $ue,
+               'afficher' => $afficher,
+           ];
+
+
+           //dd($data);
+           return view('user.examination.examination_cc', $data);
        }
 
 
@@ -180,10 +299,41 @@ class ExaminationController extends Controller
         return view('teacher.examination.add_examination',$data);
     }
 
+    public function add_examination_cc($code, $chapter=null)
+    {
+        // The UE does not exists
+        $ue = Ue::whereCode($code)->first();
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        // he has not paid for this level
+        if(!in_array(auth()->user()->id, $ue->semester->level->participants()->pluck('user_id')->toArray())){
+            // abort(404);
+        }
+
+        if(!is_null($chapter)){
+            $chapter = $ue->chapters()->where('chapters.id', $chapter)->first();
+        }else{
+            $chapter = @$ue->chapters[0];
+        }
+
+        $data = [
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'chapter'=> $chapter,
+        ];
+
+
+
+        return view('teacher.cc.examination.add_examination',$data);
+    }
+
 //question du QCM
     public function index1($code, $chapter=null)
     {
-        $questions = Question::where('code', $code)->get();
+        $type = "sn";
+        $questions = Question::where('code', $code )->where("type_exam", $type)->get();
 
         // The UE does not exists
         $ue = Ue::whereCode($code)->first();
@@ -202,9 +352,30 @@ class ExaminationController extends Controller
         return view('teacher.questions.index', $data);
     }
 
+    public function index1_cc($code, $chapter=null)
+    {
+        $questions = Question::where('code', $code )->where("type_exam", 'cc')->get();
+
+        // The UE does not exists
+        $ue = Ue::whereCode($code)->first();
+
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        $data = [
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'questions' => $questions,
+
+        ];
+
+        return view('teacher.cc.questions.index', $data);
+    }
+
     public function create($code)
     {
-        $questions = Question::where('code', $code)->get();
+        $questions = Question::where('code', $code)->where("type_exam", 'sn')->get();
 
         // The UE does not exists
         $ue = Ue::whereCode($code)->first();
@@ -228,10 +399,36 @@ class ExaminationController extends Controller
         return view('teacher.questions.create', $data);
     }
 
+    public function create_cc($code)
+    {
+        $questions = Question::where('code', $code )->where("type_exam", 'cc')->get();
+
+        // The UE does not exists
+        $ue = Ue::whereCode($code)->first();
+
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        // he has not paid for this level
+        if(!in_array(auth()->user()->id, $ue->semester->level->participants()->pluck('user_id')->toArray())){
+            // abort(404);
+        }
+
+
+        $data = [
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'questions' => $questions,
+        ];
+        //dd($data);
+        return view('teacher.cc.questions.create', $data);
+    }
+
     public function newquestion(Request $request)
     {
 
-        $questions = Question::where('code', $request->code_ue)->get();
+        $questions = Question::where('code', $request->code_ue)->where("type_exam", 'sn')->get();
 
         // The UE does not exists
         $ue = Ue::whereCode($request->code_ue)->first();
@@ -270,6 +467,48 @@ class ExaminationController extends Controller
         return view('teacher.questions.index',$data);
     }
 
+    public function newquestion_cc(Request $request)
+    {
+
+        $questions = Question::where('code', $request->code_ue  )->where("type_exam", 'cc')->get();
+
+        // The UE does not exists
+        $ue = Ue::whereCode($request->code_ue)->first();
+
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        $this->validate($request, [
+            'code_ue' => "required",
+            // 'poste' => "required",
+        ]);
+
+        $idop = Question::create([
+            'code' => $request->code_ue,
+            'question_text' => $request->question_text,
+            'type_exam' => 'cc',
+
+        ]);
+
+        Post::create([
+
+            'question_id' => $idop->id,
+            'option_id' => 0,
+            'code' => $request->code_ue,
+            'type_exam' => 'cc',
+
+        ]);
+
+        $data = [
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'questions' => $questions,
+        ];
+        //dd($data);
+        return view('teacher.cc.questions.index',$data);
+    }
+
     public function deletequestion($id)
     {
         $question = Question::find($id);
@@ -304,6 +543,28 @@ class ExaminationController extends Controller
         ];
         //dd($data);
         return view("teacher.questions.edit", $data);
+    }
+
+    public function editquestion_cc($id)
+    {
+        $questions = Question::where('id', $id)->first();
+        $ue = Ue::whereCode($questions->code)->first();
+
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        if(is_null($questions)){
+            return redirect()->route('teacher.cc.questions');
+        }
+
+        $data =[
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'questions' => $questions,
+        ];
+        //dd($data);
+        return view("teacher.cc.questions.edit", $data);
     }
 
 
@@ -356,11 +617,13 @@ class ExaminationController extends Controller
 
       public function store(Request $request, $code)
       {
+
           $options = Option::find(array_values($request->input('questions')));
 
           $result = auth()->user()->userResults()->create([
               'code' => $code,
-              'total_points' => $options->sum('points')
+              'total_points' => $options->sum('points'),
+              'type_exam' => 'sn'
           ]);
 
           $questions = $options->mapWithKeys(function ($option) {
@@ -373,14 +636,38 @@ class ExaminationController extends Controller
 
           $result->questions()->sync($questions);
 
-         return redirect()->route('user.result', $result->id);
+         return redirect()->route('user.results', $code);
      }
+
+     public function store_cc(Request $request, $code)
+     {
+
+         $options = Option::find(array_values($request->input('questions')));
+
+         $result = auth()->user()->userResults()->create([
+             'code' => $code,
+             'total_points' => $options->sum('points'),
+             'type_exam' => 'cc'
+         ]);
+
+         $questions = $options->mapWithKeys(function ($option) {
+             return [$option->question_id => [
+                         'option_id' => $option->id,
+                         'points' => $option->points
+                     ]
+                 ];
+             })->toArray();
+
+         $result->questions()->sync($questions);
+
+        return redirect()->route('user.results', $code);
+    }
 
     public function index2($code)
     {
         $questions = Question::where('code', $code)->get();
 
-        $results = Result::where('code', $code)->get();
+        $results = Result::where('code', $code)->where('type_exam', 'sn')->get();
         // The UE does not exists
         $ue = Ue::whereCode($code)->first();
 
@@ -396,6 +683,28 @@ class ExaminationController extends Controller
         ];
         //dd($data);
         return view('teacher.results.index', $data);
+    }
+
+    public function index2_cc($code)
+    {
+        $questions = Question::where('code', $code)->where('type_exam', 'cc')->get();
+
+        $results = Result::where('code', $code)->where('type_exam', 'cc')->get();
+        // The UE does not exists
+        $ue = Ue::whereCode($code)->first();
+
+        if(is_null($ue)){
+            abort(404);
+        }
+
+        $data = [
+            'title' => "$ue->name",
+            'ue'=> $ue,
+            'results' => $results,
+
+        ];
+        //dd($data);
+        return view('teacher.cc.results.index', $data);
     }
 
     public function tpcontrole($code)
@@ -458,48 +767,12 @@ class ExaminationController extends Controller
 
     //resultat
 
-    public function consulter($result_id){
-
-
-
-
-        $results = Result::where('user_id', $result_id)->get();
-
-        $tableaucode = [];
-        $tableaunom = [];
-
-        foreach ($results as $value){
-
-            $tableaucode [] =   $value->code;
-        }
-
-        foreach ($tableaucode as $value){
-
-            $ue = Ue::whereCode($value)->first();
-            $tableaunom [$value] =   $ue->name;
-        }
-
-
-
-        $data = [
-            'title' => "All UEs - ",
-            'titre' => $tableaunom,
-            'results'=> $results,
-
-        ];
-
-       // dd($data);
-
-        return view('user.examination.consulter', $data);
-    }
-
-
 
     public function show2($code){
 
 
         //$dernier = Result::where('code', $code)->latest();
-        $dernier = Result::where('code', $code)->get()->last();
+        $dernier = Result::where('code', $code)->where('type_exam', 'sn')->get()->last();
 
         $result = Result::whereHas('user', function ($query) {
             $query->whereId(auth()->id());
@@ -516,6 +789,80 @@ class ExaminationController extends Controller
 
     return view('user.examination.results', $data);
 }
+
+public function show2_cc($code){
+
+
+    //$dernier = Result::where('code', $code)->latest();
+    $dernier = Result::where('code', $code)->where('type_exam', 'sn')->get()->last();
+
+    $result = Result::whereHas('user', function ($query) {
+        $query->whereId(auth()->id());
+    })->findOrFail($dernier->id);
+
+
+
+$ue = Ue::whereCode($result->code)->first();
+$data = [
+    'title' => "$ue->name",
+    'result'=> $result,
+    'ue'=> $ue,
+];
+
+return view('user.examination.results', $data);
+}
+
+public function consulter($result_id){
+
+
+
+
+    $results_sn = Result::where('user_id', $result_id)->where('type_exam', 'sn')->get();
+    $results_cc = Result::where('user_id', $result_id)->where('type_exam', 'cc')->get();
+    $results_tp = Tpexamination::where('user_id', $result_id)->get();
+
+    $tableaucode = [];
+    $tableaunom = [];
+    $tableaunotecc = [];
+    $tableaunotectp = [];
+
+    foreach ($results_sn as $value){
+
+        $tableaucode [] =   $value->code;
+    }
+
+    foreach ($tableaucode as $value){
+
+        $ue = Ue::whereCode($value)->first();
+        $tableaunom [$value] =   $ue->name;
+    }
+
+    foreach ($results_cc as $value){
+
+        $tableaunotecc [$value->code] =   $value->total_points;
+    }
+
+    foreach ($results_tp as $value){
+
+        $tableaunotetp [$value->code] =   $value->note_tp;
+    }
+
+
+
+    $data = [
+        'title' => "All UEs - ",
+        'titre' => $tableaunom,
+        'notecc' => $tableaunotecc,
+        'notetp' => $tableaunotetp,
+        'results'=> $results_sn,
+
+    ];
+
+   // dd($data);
+
+    return view('user.examination.consulter', $data);
+}
+
 
 
 

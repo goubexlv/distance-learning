@@ -18,6 +18,7 @@ class CreateResultsTable extends Migration
             $table->integer('user_id');
             $table->string('code');
             $table->integer('total_points')->nullable();
+            $table->string('type_exam');
             $table->timestamps();
         });
     }

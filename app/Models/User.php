@@ -99,6 +99,16 @@ class User extends Authenticatable
         return $this->hasMany(Result::class);
     }
 
+    public function ccResults()
+    {
+        return $this->hasMany(Result::class)->where('type_exam', 'cc');
+    }
+
+    public function snResults()
+    {
+        return $this->hasMany(Result::class)->where('type_exam', 'sn');
+    }
+
     public function userTp()
     {
         return $this->hasMany(Tpexamination::class);

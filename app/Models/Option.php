@@ -15,6 +15,7 @@ class Option extends Model
         'question',
         'option_text',
         'points',
+        'type_exam'
     ];
 
     public function ue()

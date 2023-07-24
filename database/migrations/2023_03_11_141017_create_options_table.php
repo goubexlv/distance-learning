@@ -20,6 +20,7 @@ class CreateOptionsTable extends Migration
             $table->string("question");
             $table->string('option_text');
             $table->integer('points')->nullable();
+            $table->string('type_exam');
             $table->timestamps();
         });
     }

@@ -25,10 +25,18 @@ use Illuminate\Support\Facades\Route;
 //Evaluation
 
 Route::get('/examination/{ue}', [ExaminationController::class, "follow_examination"])->name('class.examination');
+Route::get('/examination_cc/{ue}', [ExaminationController::class, "follow_examination_cc"])->name('class.examination_cc');
+
 Route::post('test/{ue}', [ExaminationController::class, "store"])->name('test.store');
+
+Route::post('test_cc/{ue}', [ExaminationController::class, "store_cc"])->name('test.store_cc');
+
 Route::post('/tp/{ue}/{id}', [ExaminationController::class, 'tpstore'])->name("tp.store");
-Route::get('result/{id}', [ExaminationController::class, "show"])->name('user.result');
-Route::get('results/{ue}', [ExaminationController::class, "show2"])->name('user.resultas');
+
+Route::get('results/{id}', [ExaminationController::class, "show2"])->name('user.result');
+
+Route::get('results/{ue}', [ExaminationController::class, "show2"])->name('user.results');
+
 Route::get('consulter/{id}', [ExaminationController::class, "consulter"])->name('user.consulter');
 
 

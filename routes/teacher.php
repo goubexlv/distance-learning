@@ -21,7 +21,11 @@ use App\Http\Controllers\ExaminationController;
 */
 
 Route::get('examination/add_examination/{ue}', [ExaminationController::class, 'add_examination'])->name('class.add_examination');
+Route::get('examination/add_examination_cc/{ue}', [ExaminationController::class, 'add_examination_cc'])->name('class.add_examination_cc');
+
 Route::post("add/{ue}", [ExaminationController::class, "createexam"])->name('exam.add');
+Route::post("add_cc/{ue}", [ExaminationController::class, "createexam_cc"])->name('exam_cc.add');
+
 Route::get('/tp/{ue}', [ExaminationController::class, 'tpcontrole'])->name('result.tp');
 Route::get('/download/{nom}', [ExaminationController::class, 'downloadtp'])->name('download.don');
 
@@ -31,24 +35,39 @@ Route::post('/modification/{id}', [ExaminationController::class, 'updatetp'])->n
 //question route
 
 Route::get('/questions/{ue}', [ExaminationController::class, 'index1'])->name('questions.index');
-Route::get('/questions/create/{ue}', [ExaminationController::class, 'create'])->name('questions.create');
-Route::post('/', [ExaminationController::class, 'newquestion'])->name('questions.new');
-Route::get('questions/delete/{id}', [ExaminationController::class, "deletequestion"])->name('question.delete');
-Route::get('/edit/{id}', [ExaminationController::class, "editquestion"])->name("question.edit");
-Route::post('questions/update/{ue}', [ExaminationController::class, "updatequestion"])->name("question.update");
+Route::get('/questions_cc/{ue}', [ExaminationController::class, 'index1_cc'])->name('questions.index_cc');
 
+Route::get('/questions/create/{ue}', [ExaminationController::class, 'create'])->name('questions.create');
+Route::get('/questions/create_cc/{ue}', [ExaminationController::class, 'create_cc'])->name('questions.create_cc');
+
+Route::post('/', [ExaminationController::class, 'newquestion'])->name('questions.new');
+Route::post('/', [ExaminationController::class, 'newquestion_cc'])->name('questions.new_cc');
+
+Route::get('questions/delete/{id}', [ExaminationController::class, "deletequestion"])->name('question.delete');
+
+Route::get('/edit/{id}', [ExaminationController::class, "editquestion"])->name("question.edit");
+Route::get('/edit_cc/{id}', [ExaminationController::class, "editquestion_cc"])->name("question.edit_cc");
+
+Route::post('questions/update/{ue}', [ExaminationController::class, "updatequestion"])->name("question.update");
+Route::post('questions/update_cc/{ue}', [ExaminationController::class, "updatequestion_cc"])->name("question.update_cc");
 
 
 //Options route
 Route::get('/options/{ue}', [OptionsController::class, 'index'])->name('options.index');
+Route::get('/options_cc/{ue}', [OptionsController::class, 'index_cc'])->name('options.index_cc');
+
 Route::get('/options/create/{ue}', [OptionsController::class, 'create'])->name('options.create');
+Route::get('/options/create_cc/{ue}', [OptionsController::class, 'create_cc'])->name('options.create_cc');
+
 Route::post('new/{ue}', [OptionsController::class, 'newoptions'])->name('options.new');
+Route::post('new/{ue}', [OptionsController::class, 'newoptions_cc'])->name('options.new_cc');
 Route::get('/delete/{id}', [OptionsController::class, "deleteoption"])->name("option.delete");
 
 
 
 //resultat
 Route::get('/result/{ue}', [ExaminationController::class, 'index2'])->name('result.index');
+Route::get('/result_cc/{ue}', [ExaminationController::class, 'index2_cc'])->name('result.index_cc');
 
 
 

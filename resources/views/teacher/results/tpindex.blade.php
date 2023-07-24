@@ -81,7 +81,7 @@
                 <div class="modal-body">
                     <h4 class="modal-header-title">New Note</h4>
                     <div class="login-form">
-                        <form action="{{route('tp.note.add', $ids )}}" method="POST">
+                        <form action="{{route('tp.note.add',  $ids ) }}" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label>Nouvelle note <span class="text-danger">*</span></label>

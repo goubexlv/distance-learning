@@ -187,8 +187,11 @@
 
             <div class="edu_wraper">
                 <h4 class="edu_title">UE examination</h4>
+                <div class="form-group text-right">
+                    <a href="{{route('class.add_examination_cc', ['ue'=>$ue->code])}}" class="btn btn-outline-theme" >Add a examination controle continu</a>
+                </div>
                     <div class="form-group text-right">
-                        <a href="{{route('class.add_examination', ['ue'=>$ue->code])}}" class="btn btn-outline-theme" >Add a examination</a>
+                        <a href="{{route('class.add_examination', ['ue'=>$ue->code])}}" class="btn btn-outline-theme" >Add a examination session normale</a>
                     </div>
                 </div>
 

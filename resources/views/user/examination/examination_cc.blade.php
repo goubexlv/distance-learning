@@ -21,7 +21,7 @@
                         </div>
                     @endif
                     <div class="card-header" style="font-weight: bold; color: blue;">{{ $title }}</div>
-                    <form method="POST" id="myForm" action="{{ route('test.store', $ue->code) }} ">
+                    <form method="POST" id="myForm" action="{{ route('test.store_cc', $ue->code) }} ">
                         @csrf
                         @foreach($afficher as $affiche)
 
@@ -91,7 +91,7 @@
                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
                     });
                         $.ajax({
-                            url: "{{ route('test.store', $ue->code) }}",
+                            url: "{{ route('test.store_cc', $ue->code) }}",
                             type: "POST",
                             data: $('#myForm').serialize(),
                             success: function(reponse){

@@ -13,7 +13,8 @@ class Result extends Model
 
     protected $fillable=[
         'code',
-        'total_points'
+        'total_points',
+        'type_exam'
     ];
 
     public function user(){

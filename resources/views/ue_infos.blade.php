@@ -184,14 +184,21 @@
                             </div>
                                 @php
                                     $user_choix  = [];
+                                    $user_choix2 = [];
                                 @endphp
-                                @auth <?php $user_choix = auth()->user()->userResults()->pluck('user_id')->toArray(); ?> @endauth
+                                @auth <?php $user_choix = auth()->user()->snResults()->pluck('user_id')->toArray(); ?> @endauth
 
                             @if(!in_array(auth()->user()->id, $user_choix))
                             <div class="ed_view_link">
-                                <a href="{{ route('class.examination', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Examination<i class="ti-angle-right"></i></a>
+                                <a href="{{ route('class.examination', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Examination SN<i class="ti-angle-right"></i></a>
                             </div>
                                 @endif
+                                @auth <?php $user_choix2 = auth()->user()->ccResults()->pluck('user_id')->toArray(); ?> @endauth
+                                @if(!in_array(auth()->user()->id, $user_choix2))
+                                <div class="ed_view_link">
+                                    <a href="{{ route('class.examination_cc', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Examination CC<i class="ti-angle-right"></i></a>
+                                </div>
+                                    @endif
                                 @php
                                     $user_tp  = [];
                                 @endphp

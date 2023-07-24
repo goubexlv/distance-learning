@@ -14,7 +14,10 @@
                           <tr>
                             <th scope="col">Code UE</th>
                             <th scope="col">Title</th>
-                            <th scope="col">Moy/20</th>
+                            <th scope="col">CC/20</th>
+                            <th scope="col">TP/40</th>
+                            <th scope="col">SN/40</th>
+                            <th scope="col">total/100</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -23,7 +26,10 @@
                             <th scope="row">{{ $result->code }}</th>
 
                             <td><?php echo $titre[ $result->code ] ?> </td>
-                            <td>{{ $result->total_points }}</td>
+                            <td><?php echo $notecc[ $result->code ] ?></td>
+                            <td><?php echo $notetp[ $result->code ]*2 ?></td>
+                            <td>{{ $result->total_points*2 }}</td>
+                            <td> <?php echo $notecc[ $result->code ] + ($notetp[ $result->code ]*2) + ($result->total_points*2 )?> </td>
                           </tr>
                           @endforeach
                       </table>
