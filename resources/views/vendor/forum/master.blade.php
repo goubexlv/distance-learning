@@ -185,7 +185,7 @@
             <div class="collapse navbar-collapse" :class="{ show: !isCollapsed }">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url(config('forum.web.router.prefix')) }}">{{ trans('forum::general.index') }}</a>
+                        <a class="nav-link" href="{{ route('forum.category.index')  }}">{{ trans('forum::general.index') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('forum.recent') }}">{{ trans('forum::threads.recent') }}</a>
@@ -236,6 +236,7 @@
     <div id="main" class="container">
         @include('forum::partials.breadcrumbs')
         @include('forum::partials.alerts')
+
 
         @yield('content')
     </div>

@@ -162,10 +162,13 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
        
-        /*
+        App\Providers\ForumServiceProvider::class,
+        TeamTeaTime\Forum\ForumServiceProvider::class,
+
+         /*
          * Package Service Providers...
          */
-        TeamTeaTime\Forum\ForumServiceProvider::class,
+        //Vendor\Forum\ForumServiceProvider::class,
 
         /*
          * Application Service Providers...

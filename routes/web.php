@@ -55,3 +55,11 @@ Auth::routes();
 Route::get('test/{id}', [\App\Http\Controllers\TransactionController::class, "test"]);
 
 Route::get('/forum', [ForumController::class, 'forum'])->name("forum");
+
+Route::get('/forum/index', [ForumController::class, 'index'])->name('forum.category.index');
+
+//Route::get('/forum', 'ForumController@index')->name('forum');
+//Route::get('/forum/create', 'ForumController@create');
+//Route::post('/forum/store', 'ForumController@store');
+// Ajoute d'autres routes pour les différentes actions du forum
+
