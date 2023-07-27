@@ -39,6 +39,8 @@ Route::get('results/{ue}', [ExaminationController::class, "show2"])->name('user.
 
 Route::get('consulter/{id}', [ExaminationController::class, "consulter"])->name('user.consulter');
 
+Route::get('releve/{id}', [ExaminationController::class, "genererpdf"])->name('user.generer');
+
 
 Route::get('/', [UserController::class, "index"])->name("user.index");
 

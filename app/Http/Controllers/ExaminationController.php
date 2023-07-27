@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTestRequest;
 use App\Models\Post;
 use App\Models\Result;
+use Dompdf\Adapter\PDFLib;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Ue;
@@ -13,6 +14,7 @@ use App\Models\Course;
 use App\Models\Module;
 use App\Models\Part;
 use App\Models\Section;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\QuestionRequest;
 use App\Models\Question;
@@ -22,6 +24,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Option;
 use App\Models\Tpexamination;
 use Illuminate\Http\RedirectResponse;
+
+use Illuminate\Support\Facades\File;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
@@ -876,6 +880,72 @@ public function consulter($result_id){
    // dd($data);
 
     return view('user.examination.consulter', $data);
+}
+
+public function genererpdf($result_id){
+
+
+
+
+    $results_sn = Result::where('user_id', $result_id)->where('type_exam', 'sn')->get();
+    $results_cc = Result::where('user_id', $result_id)->where('type_exam', 'cc')->get();
+    $results_tp = Tpexamination::where('user_id', $result_id)->get();
+
+    $tableaucode = [];
+    $tableaunom = [];
+    $tableaunotecc = [];
+    $tableaunotetp = [];
+    $tableaunotetpfinal = [];
+    $tableaunoteccfinal = [];
+
+    foreach ($results_tp as $value){
+
+        $tableaunotetp [$value->code] =   $value->note_tp;
+        $tableaunotetpfinal [] = $value->code;
+    }
+
+    foreach ($results_cc as $value){
+
+        $tableaunotecc [$value->code] =   $value->total_points;
+        $tableaunoteccfinal [] = $value->code;
+    }
+
+    foreach ($results_sn as $value){
+
+        $tableaucode [] =   $value->code;
+    }
+
+    foreach ($tableaucode as $value){
+
+        $ue = Ue::whereCode($value)->first();
+        $tableaunom [$value] =   $ue->name;
+
+        if(!in_array($value, $tableaunotetpfinal)){
+            $tableaunotetp[$value] =  0;
+        }
+
+        if(!in_array($value, $tableaunoteccfinal)){
+            $tableaunotecc[$value] =  0;
+        }
+
+
+    }
+
+
+    $data = [
+        'title' => "All UEs - ",
+        'titre' => $tableaunom,
+        'notecc' => $tableaunotecc,
+        'notetp' => $tableaunotetp,
+        'results'=> $results_sn,
+
+    ];
+
+   // dd($data);
+
+   $pdf = Pdf::loadView('user.examination.genererpdf', $data);
+   return $pdf->stream(auth()->user()->name.'_releve_de_note.pdf');
+;
 }
 
 

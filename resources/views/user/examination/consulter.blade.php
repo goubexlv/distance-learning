@@ -36,6 +36,9 @@
                 </div>
                 @endforeach
             </div>
+            <div class="ed_view_link">
+                <a href="{{ route('user.generer', ['id'=>auth()->user()->id]) }}" class="btn btn-theme enroll-btn">demander un relever<i class="ti-angle-right"></i></a>
+            </div>
         </div>
     </div>
 </div>
