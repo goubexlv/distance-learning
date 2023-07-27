@@ -185,16 +185,19 @@
                                 @php
                                     $user_choix  = [];
                                     $user_choix2 = [];
+                                    $codeue = [];
                                 @endphp
                                 @auth <?php $user_choix = auth()->user()->snResults()->pluck('user_id')->toArray(); ?> @endauth
+                                @auth <?php $codeue = auth()->user()->snResults()->pluck('code')->toArray(); ?> @endauth
 
-                            @if(!in_array(auth()->user()->id, $user_choix))
+
+                            @if(!in_array(auth()->user()->id, $user_choix) || !in_array($ue->code, $codeue) )
                             <div class="ed_view_link">
                                 <a href="{{ route('class.examination', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Examination SN<i class="ti-angle-right"></i></a>
                             </div>
                                 @endif
                                 @auth <?php $user_choix2 = auth()->user()->ccResults()->pluck('user_id')->toArray(); ?> @endauth
-                                @if(!in_array(auth()->user()->id, $user_choix2))
+                                @if(!in_array(auth()->user()->id, $user_choix2) || !in_array($ue->code, $codeue) )
                                 <div class="ed_view_link">
                                     <a href="{{ route('class.examination_cc', ['ue'=>$ue->code]) }}" class="btn btn-theme enroll-btn">Follow Examination CC<i class="ti-angle-right"></i></a>
                                 </div>
@@ -204,7 +207,7 @@
                                 @endphp
                                 @auth <?php $user_tp = auth()->user()->userTp()->pluck('user_id')->toArray(); ?> @endauth
 
-                                @if($existe == "notnull" && !in_array(auth()->user()->id, $user_tp) )
+                                @if($existe == "notnull" || !in_array(auth()->user()->id, $user_tp) )
                                 <div class="ed_view_link">
                                     <form id="addtp" method="POST" action="{{route('tp.store', ['ue'=>$ue->code, 'id'=> auth()->user()->id ])}}" enctype="multipart/form-data">
                                         <hr>

@@ -22,6 +22,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Option;
 use App\Models\Tpexamination;
 use Illuminate\Http\RedirectResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 
 class ExaminationController extends Controller
@@ -824,7 +826,21 @@ public function consulter($result_id){
     $tableaucode = [];
     $tableaunom = [];
     $tableaunotecc = [];
-    $tableaunotectp = [];
+    $tableaunotetp = [];
+    $tableaunotetpfinal = [];
+    $tableaunoteccfinal = [];
+
+    foreach ($results_tp as $value){
+
+        $tableaunotetp [$value->code] =   $value->note_tp;
+        $tableaunotetpfinal [] = $value->code;
+    }
+
+    foreach ($results_cc as $value){
+
+        $tableaunotecc [$value->code] =   $value->total_points;
+        $tableaunoteccfinal [] = $value->code;
+    }
 
     foreach ($results_sn as $value){
 
@@ -835,18 +851,17 @@ public function consulter($result_id){
 
         $ue = Ue::whereCode($value)->first();
         $tableaunom [$value] =   $ue->name;
+
+        if(!in_array($value, $tableaunotetpfinal)){
+            $tableaunotetp[$value] =  0;
+        }
+
+        if(!in_array($value, $tableaunoteccfinal)){
+            $tableaunotecc[$value] =  0;
+        }
+
+
     }
-
-    foreach ($results_cc as $value){
-
-        $tableaunotecc [$value->code] =   $value->total_points;
-    }
-
-    foreach ($results_tp as $value){
-
-        $tableaunotetp [$value->code] =   $value->note_tp;
-    }
-
 
 
     $data = [
@@ -862,6 +877,8 @@ public function consulter($result_id){
 
     return view('user.examination.consulter', $data);
 }
+
+
 
 
 
