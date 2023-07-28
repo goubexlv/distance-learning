@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Results of your EXAMINATION</div>
+                <div class="card-header">Resultat</div>
                 @foreach(auth()->user()->classes as $level)
                 <div class="card-body">
                     <p class="mt-5" style="text-align: center; font-weight: bold; font-style: italic; color: black;">Filière : {{ ucwords($level->field->name) }} &emsp;&emsp;&emsp; Niveau : {{ ucwords( $level->name) }}</p><br>
@@ -37,7 +37,7 @@
                 @endforeach
             </div>
             <div class="ed_view_link">
-                <a href="{{ route('user.generer', ['id'=>auth()->user()->id]) }}" class="btn btn-theme enroll-btn">demander un relever<i class="ti-angle-right"></i></a>
+                <a href="{{ route('user.generer', ['id'=>auth()->user()->id]) }}" class="btn btn-theme enroll-btn">telecharger le relever<i class="ti-angle-right"></i></a>
             </div>
         </div>
     </div>

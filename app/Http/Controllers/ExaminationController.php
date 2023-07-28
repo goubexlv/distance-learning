@@ -834,6 +834,7 @@ public function consulter($result_id){
     $tableaunotetpfinal = [];
     $tableaunoteccfinal = [];
 
+
     foreach ($results_tp as $value){
 
         $tableaunotetp [$value->code] =   $value->note_tp;
@@ -850,6 +851,7 @@ public function consulter($result_id){
 
         $tableaucode [] =   $value->code;
     }
+    ksort($tableaucode);
 
     foreach ($tableaucode as $value){
 
@@ -870,6 +872,7 @@ public function consulter($result_id){
 
     $data = [
         'title' => "All UEs - ",
+        'tabcode' => $tableaucode,
         'titre' => $tableaunom,
         'notecc' => $tableaunotecc,
         'notetp' => $tableaunotetp,
@@ -894,9 +897,16 @@ public function genererpdf($result_id){
     $tableaucode = [];
     $tableaunom = [];
     $tableaunotecc = [];
+    $tableaunotesn = [];
     $tableaunotetp = [];
     $tableaunotetpfinal = [];
     $tableaunoteccfinal = [];
+    $tableaunotesnfinal = [];
+    $resultfinal = [];
+    $resultmension = [];
+    $resultmgp = [];
+    $resultdecision = [];
+    $mgp = 0;
 
     foreach ($results_tp as $value){
 
@@ -912,8 +922,16 @@ public function genererpdf($result_id){
 
     foreach ($results_sn as $value){
 
+        $tableaunotesn [$value->code] =   $value->total_points;
+        $tableaunotesnfinal [] = $value->code;
+    }
+
+    foreach ($results_sn as $value){
+
         $tableaucode [] =   $value->code;
     }
+
+    krsort($tableaucode);
 
     foreach ($tableaucode as $value){
 
@@ -928,24 +946,116 @@ public function genererpdf($result_id){
             $tableaunotecc[$value] =  0;
         }
 
+        if(!in_array($value, $tableaunotesnfinal)){
+            $tableaunotesn[$value] =  0;
+        }
 
+
+    }
+
+    foreach ($tableaucode as $value){
+
+        $resultfinal[$value] = ($tableaunotesn[$value]*2) + $tableaunotecc[$value] + ($tableaunotetp[$value]*2) ;
+
+    }
+
+    foreach ($tableaucode as $value){
+
+
+        if($resultfinal[$value] >= 80){
+            $resultmension[$value] = "A";
+            $resultmgp [] = 4*5;
+            $resultdecision[$value] = "CA";
+        }
+        if($resultfinal[$value] >= 75 && $resultfinal[$value] <= 79){
+            $resultmension[$value] = "A -";
+            $resultmgp [] = 3.70*5;
+            $resultdecision[$value] = "CA";
+        }
+        if($resultfinal[$value] >= 70 && $resultfinal[$value] <= 74){
+            $resultmension[$value] = "B +";
+            $resultmgp [] = 3.30*5;
+            $resultdecision[$value] = "CA";
+        }
+        if($resultfinal[$value] >= 65 && $resultfinal[$value] <= 69){
+            $resultmension[$value] = "B";
+            $resultmgp [] = 3*5;
+            $resultdecision[$value] = "CA";
+        }
+        if($resultfinal[$value] >= 60 && $resultfinal[$value] <= 64){
+            $resultmension[$value] = "B -";
+            $resultmgp [] = 2.70*5;
+            $resultdecision[$value] = "CA";
+        }
+        if($resultfinal[$value] >= 55 && $resultfinal[$value] <= 59){
+            $resultmension[$value] = "C +";
+            $resultmgp [] = 2.30*5;
+            $resultdecision[$value] = "CA";
+        }
+        if($resultfinal[$value] >= 50 && $resultfinal[$value] <= 54){
+            $resultmension[$value] = "C";
+            $resultmgp [] = 2;
+            $resultdecision[$value] = "CA";
+        }
+        if($resultfinal[$value] >= 45 && $resultfinal[$value] <= 49){
+            $resultmension[$value] = "C -";
+            $resultmgp [] = 1.70*5;
+            $resultdecision[$value] = "CANT";
+        }
+        if($resultfinal[$value] >= 40 && $resultfinal[$value] <= 44){
+            $resultmension[$value] = "D +";
+            $resultmgp [] = 1.30*5;
+            $resultdecision[$value] = "CANT";
+        }
+        if($resultfinal[$value] >= 35 && $resultfinal[$value] <= 39){
+            $resultmension[$value] = "D";
+            $resultmgp [] = 1*5;
+            $resultdecision[$value] = "CANT";
+
+        }
+        if($resultfinal[$value] >= 30 && $resultfinal[$value] <= 34){
+            $resultmension[$value] = "E";
+            $resultmgp [] = 0*5;
+            $resultdecision[$value] = "echec";
+        }
+        if($resultfinal[$value] < 30 ){
+            $resultmension[$value] = "F";
+            $resultmgp [] = 0*5;
+            $resultdecision[$value] = "echec";
+        }
+
+
+    }
+
+    $mgp = array_sum($resultmgp)/60;
+    $mgp = round ( $mgp,2 );
+    $decision = " ";
+
+    if($mgp >= 2){
+        $decision = "ADMIS";
     }
 
 
     $data = [
         'title' => "All UEs - ",
+        'decision'=>$decision,
+        'tabcode' => $tableaucode,
         'titre' => $tableaunom,
+        'notesn' => $tableaunotesn,
         'notecc' => $tableaunotecc,
         'notetp' => $tableaunotetp,
-        'results'=> $results_sn,
+        'resultdecision'=> $resultdecision,
+        'resultsmention'=> $resultmension,
+        'results'=> $resultfinal,
+        'mgp'=> $mgp,
 
     ];
 
    // dd($data);
 
-   $pdf = Pdf::loadView('user.examination.genererpdf', $data);
-   return $pdf->stream(auth()->user()->name.'_releve_de_note.pdf');
-;
+  // $pdf = Pdf::loadView('user.examination.genererpdf', $data);
+   //return $pdf->stream(auth()->user()->name.'_releve_de_note.pdf');
+   return view('user.examination.genererpdf', $data);
 }
 
 
