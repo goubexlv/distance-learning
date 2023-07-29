@@ -851,7 +851,7 @@ public function consulter($result_id){
 
         $tableaucode [] =   $value->code;
     }
-    ksort($tableaucode);
+
 
     foreach ($tableaucode as $value){
 

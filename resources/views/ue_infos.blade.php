@@ -207,7 +207,7 @@
                                 @endphp
                                 @auth <?php $user_tp = auth()->user()->userTp()->pluck('user_id')->toArray(); ?> @endauth
 
-                                @if($existe == "notnull" || !in_array(auth()->user()->id, $user_tp) )
+                                @if(!in_array(auth()->user()->id, $user_tp) )
                                 <div class="ed_view_link">
                                     <form id="addtp" method="POST" action="{{route('tp.store', ['ue'=>$ue->code, 'id'=> auth()->user()->id ])}}" enctype="multipart/form-data">
                                         <hr>

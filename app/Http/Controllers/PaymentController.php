@@ -11,7 +11,7 @@ class PaymentController extends Controller
 {
     public static function placePayment($phone, $amount, $payment_ref, $data)
     {
-        $service_key = "VVUv5gv0YdOdYVkfCJ00Di6QSnrPS9qd";
+        $service_key = "R1AF6aWp2slHtaJCAHSq3ZpXMbgayfey";
 
         $data = array(
             'service' => $service_key,
